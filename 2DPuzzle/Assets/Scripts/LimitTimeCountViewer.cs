@@ -7,7 +7,8 @@ public class LimitTimeCountViewer : MonoBehaviour
 {
     [SerializeField]
     private TextMeshProUGUI m_Timetext;
-    private float m_limitTime;
+    public float m_limitTime;
+    
 
     private void Start()
     {

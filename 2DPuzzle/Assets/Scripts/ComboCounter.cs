@@ -44,4 +44,13 @@ public class ComboCounter : MonoBehaviour
         }
         DragObjList.Clear();
     }
+
+    public bool CheckCombo(Transform thisOrbTransform)
+    {
+        //thisOrbTransformとDragObjelistの距離を測る
+        float distance = (thisOrbTransform.position - DragObjList.LastOrDefault().transform.position).magnitude;
+        Debug.Log(distance);
+        //distanceが2より大きければtrueを返す
+        return distance>2f;
+    }
 }

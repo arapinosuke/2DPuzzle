@@ -2,15 +2,15 @@
 using UnityEngine.EventSystems;
 using System.Linq;
 
-public class OrbController : MonoBehaviour,IPointerDownHandler,IPointerEnterHandler,IPointerUpHandler
+public class OrbController : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerUpHandler
 {
-    private SpriteRenderer m_spritesRenderer=null;
+    private SpriteRenderer m_spritesRenderer = null;
 
     public ComboCounter comboCounter = null;
 
     public enum OrbType
     {
-        Invalid=-1,
+        Invalid = -1,
         BlueOrb,
         GreenOrb,
         RedOrb,
@@ -25,7 +25,7 @@ public class OrbController : MonoBehaviour,IPointerDownHandler,IPointerEnterHand
 
     private void Awake()
     {
-        m_spritesRenderer=GetComponent<SpriteRenderer>();
+        m_spritesRenderer = GetComponent<SpriteRenderer>();
         ComboEffect.gameObject.SetActive(false);
     }
 
@@ -36,14 +36,19 @@ public class OrbController : MonoBehaviour,IPointerDownHandler,IPointerEnterHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-            if(comboCounter.DragObjList.Count.Equals(0))
-            {
-                return;
-            }
+        if (comboCounter.DragObjList.Count.Equals(0))
+        {
+            return;
+        }
+       
+        if(comboCounter.CheckCombo(this.transform))
+        {
+            return;
+        }
 
-            if (comboCounter.DragObjList.Contains(this.gameObject))
-            { 
-                if (comboCounter.DragObjList.Count.Equals(1))
+        if (comboCounter.DragObjList.Contains(this.gameObject))
+        {
+            if (comboCounter.DragObjList.Count.Equals(1))
             {
                 return;
             }
@@ -52,7 +57,8 @@ public class OrbController : MonoBehaviour,IPointerDownHandler,IPointerEnterHand
             return;
         }
 
-        if (comboCounter.DragObjList.FirstOrDefault().GetComponent<OrbController>().ThisOrbType !=ThisOrbType){
+        if (comboCounter.DragObjList.FirstOrDefault().GetComponent<OrbController>().ThisOrbType != ThisOrbType)
+        {
             return;
         }
 
@@ -61,13 +67,13 @@ public class OrbController : MonoBehaviour,IPointerDownHandler,IPointerEnterHand
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if(comboCounter.ComboCount>2)
+        if (comboCounter.ComboCount > 2)
         {
-            foreach(var orb in comboCounter.DragObjList)
+            foreach (var orb in comboCounter.DragObjList)
             {
                 orb.SetActive(false);
             }
-            orbGenerater. OrbGenerate(comboCounter.ComboCount);
+            orbGenerater.OrbGenerate(comboCounter.ComboCount);
         }
         comboCounter.ClearCombo();
     }
