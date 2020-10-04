@@ -14,14 +14,23 @@ public class OrbController : MonoBehaviour, IPointerDownHandler, IPointerEnterHa
         BlueOrb,
         GreenOrb,
         RedOrb,
-        YellowOrb
+        YellowOrb,
+        DevilOrb,
+        SpecialOrb
     }
 
     public OrbType ThisOrbType = OrbType.Invalid;
 
-    public ParticleSystem ComboEffect;
+    public ParticleSystem ComboEffect=null;
 
-    public OrbGenerater orbGenerater;
+    public OrbGenerater orbGenerater=null;
+
+    public LimitTimeCountViewer LimitTimeCountViewer = null;
+
+    public ScoreViewer ScoreViewer = null;
+
+    //6秒でDevilOrbが消える
+    private float m_devilOrbDisapperSeconds = 6f;
 
     private void Awake()
     {
@@ -29,15 +38,62 @@ public class OrbController : MonoBehaviour, IPointerDownHandler, IPointerEnterHa
         ComboEffect.gameObject.SetActive(false);
     }
 
+    private void Update()
+    {
+        if(ThisOrbType==OrbType.DevilOrb)
+        {
+            m_devilOrbDisapperSeconds -= Time.deltaTime;
+
+            if (m_devilOrbDisapperSeconds<=0)
+            {
+                orbGenerater.OrbGenerate(1);
+                this.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    //ShuffleActionの実装
+    public void ShuffleAction()
+    {
+        this.GetComponent<Rigidbody2D>().
+            AddForce(new Vector2(Random.Range(-10, 10), Random.Range(-10, 10)),
+            ForceMode2D.Impulse);
+    }
+
+    public void DevilAction()
+    {
+        LimitTimeCountViewer.MinusTime();
+        ScoreViewer.MinusScore();
+    }
+      
     public void OnPointerDown(PointerEventData eventData)
     {
+        if(ThisOrbType==OrbType.DevilOrb)
+        {
+            DevilAction();
+            return;
+        }
+
         comboCounter.AddCombo(this.gameObject);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (ThisOrbType == OrbType.DevilOrb)
+        {
+            DevilAction();
+            return;
+        }
+
         if (comboCounter.DragObjList.Count.Equals(0))
         {
+            return;
+        }
+
+        if(ThisOrbType==OrbType.SpecialOrb || 
+           comboCounter.DragObjList.LastOrDefault().GetComponent<OrbController>().ThisOrbType==OrbType.SpecialOrb)
+        {
+            comboCounter.AddCombo(this.gameObject);
             return;
         }
        

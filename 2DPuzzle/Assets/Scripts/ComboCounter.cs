@@ -11,7 +11,9 @@ public class ComboCounter : MonoBehaviour
 
     public OrbGenerater m_OrbGenerater = null;
 
-    public int CurrentComboCount;
+    public int CurrentComboCount=0;
+
+    [SerializeField] private LimitTimeCountViewer m_limitTimeCountViwer = null;
 
     public void AddCombo(GameObject orb)
     {
@@ -34,6 +36,14 @@ public class ComboCounter : MonoBehaviour
 
     public void ClearCombo()
     {
+
+        //todo;コンボが3より大きければ秒数を増やす
+
+        if(DragObjList.Count>3)
+        {
+            m_limitTimeCountViwer.PlusTime();
+        }
+
         foreach (var orbs in DragObjList)
         {
             if(orbs.GetComponent<OrbController>().ComboEffect.gameObject.activeSelf)
