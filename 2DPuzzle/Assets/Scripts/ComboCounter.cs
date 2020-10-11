@@ -15,6 +15,8 @@ public class ComboCounter : MonoBehaviour
 
     [SerializeField] private LimitTimeCountViewer m_limitTimeCountViwer = null;
 
+    public SEManager m_SEManager;
+
     public void AddCombo(GameObject orb)
     {
         DragObjList.Add(orb);
@@ -44,6 +46,11 @@ public class ComboCounter : MonoBehaviour
             m_limitTimeCountViwer.PlusTime();
         }
 
+        if(DragObjList.Count>2)
+        {
+            m_SEManager.PlaySE();
+        }
+
         foreach (var orbs in DragObjList)
         {
             if(orbs.GetComponent<OrbController>().ComboEffect.gameObject.activeSelf)
@@ -52,6 +59,7 @@ public class ComboCounter : MonoBehaviour
             }
             CurrentComboCount++;
         }
+
         DragObjList.Clear();
     }
 

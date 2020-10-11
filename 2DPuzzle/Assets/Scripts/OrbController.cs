@@ -90,6 +90,15 @@ public class OrbController : MonoBehaviour, IPointerDownHandler, IPointerEnterHa
             return;
         }
 
+        //リストの中に自分がいたら帰る
+        foreach(var thisOrb in comboCounter.DragObjList)
+        {
+            if(thisOrb==this.gameObject)
+            {
+                return;
+            }
+        }
+
         if(ThisOrbType==OrbType.SpecialOrb || 
            comboCounter.DragObjList.LastOrDefault().GetComponent<OrbController>().ThisOrbType==OrbType.SpecialOrb)
         {
